@@ -21,13 +21,13 @@ Having it set, vttf can be used in an automation pipeline in the following way:
     eval $(vttf --vault-address <VAULT_ADDRESS_HERE> --vault-token <YOUR_TOKEN_HERE> secret infra)
     terraform plan
 
-Output of the tool is evaluated and relevant environment variables are set. In case of this example the output will be:
+Output of the tool is evaluated and relevant environment variables are set. In case of this example the output can be:
 
     export TF_VAR_vpc_cidr=$'10.200.0.0/24'
-    export TF_VAR_subnet_cirds=$'[ \"10.200.0.0/25\", \"10.200.0.128/25\" ]'
+    export TF_VAR_subnet_cidrs=$'[ \"10.200.0.0/25\", \"10.200.0.128/25\" ]'
 
-Terraform picks values for variables from environment variables with TF_VAR_ prefix. 
-You can put all the variables into a Vault secret and not provide a .tfvars file at all or you can put a subset of sensitive variables into a secret and set the rest in a .tfvars file.
+Terraform picks values for its input variables from environment variables with TF_VAR_ prefix. 
+You can put all the variables into a Vault secret and not provide a .tfvars file at all, or you can put a subset of sensitive variables into a secret and set the rest in a .tfvars file.
 ### Installation
 Install the tool on Debian/Ubuntu from .deb package provided in release:
 
