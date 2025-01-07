@@ -32,7 +32,7 @@ jobs:
         mkdir -p vttf/usr/local/bin
         cp target/release/vttf vttf/usr/local/bin/
         echo "Package: vttf
-        Version: ${{ env. VERSION }}
+        Version: ${{ env.VERSION }}
         Section: base
         Priority: optional
         Architecture: amd64
