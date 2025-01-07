@@ -2,9 +2,8 @@ name: Rust
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    tags:
+      - 'v*'
 
 env:
   CARGO_TERM_COLOR: always
@@ -15,8 +14,33 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Get release version
+      id: version
+      run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
+    
     - name: Build
       run: cargo build --release
-    - name: Run tests
-      run: cargo test --verbose
+    
+    - name: Package
+      run: |
+        mkdir -p vttf/DEBIAN
+        mkdir -p vttf/usr/local/bin
+        cp target/release/vttf vttf/usr/local/bin/
+        echo "Package: vttf
+        Version: ${{ env. VERSION }}
+        Section: base
+        Priority: optional
+        Architecture: amd64
+        Maintainer: Andrey Chushkin <andrey@chushkin.tech>
+        Description: Tool to convert Vault secret data to Terraform environment variables." > vttf/DEBIAN/control
+        dpkg-deb --build vttf
+        mv vttf.deb vttf_${{ env.VERSION }}_amd64.deb
+    
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: Debian package
+        path: vttf_${{ env.VERSION }}_amd64.deb
