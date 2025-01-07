@@ -25,3 +25,29 @@ Output of the tool is evaluated and relevant environment variables are set. In c
 
     export TF_VAR_vpc_cidr=$'10.200.0.0/24'
     export TF_VAR_subnet_cirds=$'[ \"10.200.0.0/25\", \"10.200.0.128/25\" ]'
+
+Terraform picks values for variables from environment variables with TF_VAR_ prefix. 
+You can put all the variables into a Vault secret and not provide a .tfvars file at all or you can put a subset of sensitive variables into a secret and set the rest in a .tfvars file.
+### Installation
+Install the tool on Debian/Ubuntu from .deb package provided in release:
+
+    wget https://github.com/chushkintech/vttf/releases/download/v0.2.0/vttf_0.2.0_amd64.deb
+    sudo dpkg -i vttf_0.2.0_amd64.deb
+
+### Usage
+
+    Usage: vttf [OPTIONS] <MOUNT_POINT> <PATH>
+    
+    Arguments:
+      <MOUNT_POINT>  Secret mount point
+      <PATH>         Vault secret path
+    
+    Options:
+          --vault-address <ADDR>   Vault address
+          --vault-token <TOKEN>    Vault token
+          --value-prefix <PREFIX>  Prefixes for output [default: TF_VAR_]
+      -h, --help                   Print help
+      -V, --version                Print version
+
+If --vault-address and/or --vault-token are not provided, the tool will look for VAULT_ADDR and VAULT_TOKEN environment variables. Vault address and token environment variables take precedence over command line parameters.
+
